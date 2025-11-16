@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- 
+<!--
 <Excel>
-	<sheet name="" unnecessary="false">
-		<column name="" field="" default="" type="String" pattern="" notnull="false" unnecessary="false" />
-	</sheet>
-</Excel> 
+    <sheet name="" unnecessary="false">
+        <column name="" field="" default="" type="String" pattern="" notnull="false" unnecessary="false" />
+    </sheet>
+</Excel>
 -->
 
 <Excel>
@@ -13,7 +13,7 @@
         <column name="年龄" field="age" type="number" />
         <column name="性别" field="sex" />
     </sheet>
-    
+
     <sheet name="部门">
         <column name="名称" field="name" />
         <column name="人数" field="num" type="number" />

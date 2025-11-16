@@ -74,7 +74,7 @@ public final class RequestProto {
       return this.unknownFields;
     }
     @SuppressWarnings("unused")
-	private Request(
+    private Request(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
@@ -278,7 +278,7 @@ public final class RequestProto {
     }
 
     @SuppressWarnings("unchecked")
-	@java.lang.Override
+    @java.lang.Override
     public int hashCode() {
       if (memoizedHashCode != 0) {
         return memoizedHashCode;

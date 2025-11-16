@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
  */
 public class Producer extends Thread{
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(Consumer.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(Consumer.class);
 
     private static AtomicInteger index = new AtomicInteger(0);
 
@@ -28,10 +28,10 @@ public class Producer extends Thread{
         while(true){
             Task task = new Task();
             try {
-            	LOGGER.info("压入子弹" + task.getIndex());
+                LOGGER.info("压入子弹" + task.getIndex());
                 taskList.offer(task);
             } catch (InterruptedException e) {
-            	LOGGER.info("停止生产");
+                LOGGER.info("停止生产");
                 return;
             }
         }

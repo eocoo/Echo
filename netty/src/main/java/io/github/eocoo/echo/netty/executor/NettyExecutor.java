@@ -11,25 +11,25 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class NettyExecutor extends SingleThreadEventExecutor {
 
-	private static final AtomicInteger index = new AtomicInteger();
+    private static final AtomicInteger index = new AtomicInteger();
 
-	protected NettyExecutor() {
-		super(null, r -> {
-			return new Thread("task-executor-" + index.incrementAndGet()){
-				@Override
-				public void run() {
-					r.run();
-				}
-			};
-		}, true);
-	}
+    protected NettyExecutor() {
+        super(null, r -> {
+            return new Thread("task-executor-" + index.incrementAndGet()){
+                @Override
+                public void run() {
+                    r.run();
+                }
+            };
+        }, true);
+    }
 
-	@Override
-	protected void run() {
-		Runnable r;
-		while((r = takeTask()) != null){
-			r.run();
-		}
-		confirmShutdown(); // 退出之前执行 confirmShutdown()
-	}
+    @Override
+    protected void run() {
+        Runnable r;
+        while((r = takeTask()) != null){
+            r.run();
+        }
+        confirmShutdown(); // 退出之前执行 confirmShutdown()
+    }
 }

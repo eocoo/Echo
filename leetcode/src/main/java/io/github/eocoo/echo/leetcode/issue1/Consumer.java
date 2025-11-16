@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
  */
 public class Consumer extends Thread{
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(Consumer.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(Consumer.class);
 
     private static AtomicInteger index = new AtomicInteger(0);
 
@@ -30,7 +30,7 @@ public class Consumer extends Thread{
             try {
                 task = taskList.take();
             } catch (InterruptedException e) {
-            	LOGGER.info("停止消费");
+                LOGGER.info("停止消费");
                 return;
             }
             LOGGER.info("射出子弹" + task.getIndex());

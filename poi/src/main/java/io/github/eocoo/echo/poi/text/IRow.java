@@ -9,19 +9,19 @@ import java.util.List;
  */
 public interface IRow {
 
-	/**
-	 * 获取当前行索引
-	 */
-	int getRowIndex();
+    /**
+     * 获取当前行索引
+     */
+    int getRowIndex();
 
-	/**
-	 * 行内容是否为空
-	 */
-	boolean isEmpty();
+    /**
+     * 行内容是否为空
+     */
+    boolean isEmpty();
 
-	/**
-	 * 获取行列数据
-	 */
-	List<String> getColumnList();
+    /**
+     * 获取行列数据
+     */
+    List<String> getColumnList();
 
 }

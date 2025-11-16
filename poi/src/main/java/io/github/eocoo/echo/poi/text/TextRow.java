@@ -9,40 +9,40 @@ import java.util.List;
  */
 public class TextRow implements IRow {
 
-	private final int rowIndex;
+    private final int rowIndex;
 
-	private final List<String> columnList;
+    private final List<String> columnList;
 
-	private boolean isEmpty;
+    private boolean isEmpty;
 
 
-	public TextRow(int rowIndex, List<String> rowData){
-		this.rowIndex = rowIndex;
-		this.columnList = rowData;
-	}
+    public TextRow(int rowIndex, List<String> rowData){
+        this.rowIndex = rowIndex;
+        this.columnList = rowData;
+    }
 
-	@Override
-	public int getRowIndex() {
-		return rowIndex;
-	}
+    @Override
+    public int getRowIndex() {
+        return rowIndex;
+    }
 
-	@Override
-	public boolean isEmpty() {
-		return isEmpty;
-	}
+    @Override
+    public boolean isEmpty() {
+        return isEmpty;
+    }
 
-	@Override
-	public List<String> getColumnList() {
-		return columnList;
-	}
+    @Override
+    public List<String> getColumnList() {
+        return columnList;
+    }
 
-	void setEmpty(boolean isEmpty) {
-		this.isEmpty = isEmpty;
-	}
+    void setEmpty(boolean isEmpty) {
+        this.isEmpty = isEmpty;
+    }
 
-	@Override
-	public String toString() {
-		return "{rowIndex=" + rowIndex + ", columnList=" + columnList + ", isEmpty=" + isEmpty + "}";
-	}
+    @Override
+    public String toString() {
+        return "{rowIndex=" + rowIndex + ", columnList=" + columnList + ", isEmpty=" + isEmpty + "}";
+    }
 
 }

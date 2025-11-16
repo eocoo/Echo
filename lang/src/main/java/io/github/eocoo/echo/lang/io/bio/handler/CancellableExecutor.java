@@ -16,25 +16,25 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class CancellableExecutor extends ThreadPoolExecutor {
 
-	public CancellableExecutor(int corePoolSize, int maximumPoolSize, long keepAliveSeconds) {
-		super(corePoolSize, maximumPoolSize, keepAliveSeconds, TimeUnit.SECONDS,
-				new LinkedBlockingDeque<>(100), new HandleThreadFactory());
-	}
+    public CancellableExecutor(int corePoolSize, int maximumPoolSize, long keepAliveSeconds) {
+        super(corePoolSize, maximumPoolSize, keepAliveSeconds, TimeUnit.SECONDS,
+                new LinkedBlockingDeque<>(100), new HandleThreadFactory());
+    }
 
-	@Override
-	protected <T> RunnableFuture<T> newTaskFor(Runnable runnable,T value) {
-		if (runnable instanceof CancellableHandler) {
-			return new CancellableFuture<>(runnable, value);
-		} else {
-			return super.newTaskFor(runnable,value);
-		}
-	}
+    @Override
+    protected <T> RunnableFuture<T> newTaskFor(Runnable runnable,T value) {
+        if (runnable instanceof CancellableHandler) {
+            return new CancellableFuture<>(runnable, value);
+        } else {
+            return super.newTaskFor(runnable,value);
+        }
+    }
 
-	private static class HandleThreadFactory implements ThreadFactory {
-		private final AtomicInteger index = new AtomicInteger(0);
-		@Override
-		public Thread newThread(Runnable r) {
-			return new Thread(r, "server-handler-" + index.incrementAndGet());
-		}
-	}
+    private static class HandleThreadFactory implements ThreadFactory {
+        private final AtomicInteger index = new AtomicInteger(0);
+        @Override
+        public Thread newThread(Runnable r) {
+            return new Thread(r, "server-handler-" + index.incrementAndGet());
+        }
+    }
 }

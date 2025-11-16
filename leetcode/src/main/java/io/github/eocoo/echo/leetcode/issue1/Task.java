@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
  */
 public class Task implements Runnable{
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(Task.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(Task.class);
 
     private static AtomicInteger index = new AtomicInteger(0);
 
@@ -24,7 +24,7 @@ public class Task implements Runnable{
 
     @Override
     public void run() {
-    	LOGGER.info("子弹[{}]执行飞行", currentIndex);
+        LOGGER.info("子弹[{}]执行飞行", currentIndex);
     }
 
     public String getIndex(){

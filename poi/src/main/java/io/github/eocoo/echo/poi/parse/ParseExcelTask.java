@@ -34,189 +34,189 @@ import io.github.eocoo.echo.poi.excel.IExcelReader;
  */
 public abstract class ParseExcelTask<V, E> extends ParseTask<V, E> {
 
-	private final boolean isBatchBySheet;
+    private final boolean isBatchBySheet;
 
-	protected int sheetIndex = 0;
+    protected int sheetIndex = 0;
 
-	protected int rowIndex = 0;
+    protected int rowIndex = 0;
 
-	/**
-	 * @param sourceUri 资源uri
-	 * @param batch 入库时的批处理数
-	 * @param isBatchBySheet isBatchBySheet
-	 */
-	public ParseExcelTask(String sourceUri, int batch, boolean isBatchBySheet){
-		super(sourceUri, batch);
-		this.isBatchBySheet = isBatchBySheet;
-	}
+    /**
+     * @param sourceUri 资源uri
+     * @param batch 入库时的批处理数
+     * @param isBatchBySheet isBatchBySheet
+     */
+    public ParseExcelTask(String sourceUri, int batch, boolean isBatchBySheet){
+        super(sourceUri, batch);
+        this.isBatchBySheet = isBatchBySheet;
+    }
 
-	@Override
-	public boolean beforeExec() throws Exception {
-		String logName = new File(id).getName();
-		if(StringUtils.isBlank(getScheduleName())){
-			this.progressLog = new File(parseCache + File.separator + logName + ".log");
-		}else{
-			this.progressLog = new File(parseCache + File.separator + getScheduleName() + File.separator + logName + ".log");
-		}
+    @Override
+    public boolean beforeExec() throws Exception {
+        String logName = new File(id).getName();
+        if(StringUtils.isBlank(getScheduleName())){
+            this.progressLog = new File(parseCache + File.separator + logName + ".log");
+        }else{
+            this.progressLog = new File(parseCache + File.separator + getScheduleName() + File.separator + logName + ".log");
+        }
 
-		File parentFile = progressLog.getParentFile();
-		if(!parentFile.exists() && !parentFile.mkdirs()){
-			throw new RuntimeException("cache directory create failed: " + parentFile);
-		}
+        File parentFile = progressLog.getParentFile();
+        if(!parentFile.exists() && !parentFile.mkdirs()){
+            throw new RuntimeException("cache directory create failed: " + parentFile);
+        }
 
-		if(!progressLog.exists()){
-			if(!progressLog.createNewFile()){
-				logger.error("progress log create failed.");
-				return false;
-			}
-		}else{
-			logger.warn("continue to deal with uncompleted task.");
-			List<String> lines = FileUtils.readLines(progressLog, Charset.defaultCharset());
-			try{
-				sheetIndex = Integer.parseInt(lines.get(0));
-				rowIndex = Integer.parseInt(lines.get(1));
-				logger.info("get failed file processed progress: sheetIndex={},rowIndex={}", sheetIndex, rowIndex);
-			}catch(Exception e){
-				logger.warn("get history processed progress failed, will process from scratch.");
-			}
-		}
+        if(!progressLog.exists()){
+            if(!progressLog.createNewFile()){
+                logger.error("progress log create failed.");
+                return false;
+            }
+        }else{
+            logger.warn("continue to deal with uncompleted task.");
+            List<String> lines = FileUtils.readLines(progressLog, Charset.defaultCharset());
+            try{
+                sheetIndex = Integer.parseInt(lines.get(0));
+                rowIndex = Integer.parseInt(lines.get(1));
+                logger.info("get failed file processed progress: sheetIndex={},rowIndex={}", sheetIndex, rowIndex);
+            }catch(Exception e){
+                logger.warn("get history processed progress failed, will process from scratch.");
+            }
+        }
 
-		return true;
-	}
+        return true;
+    }
 
-	@Override
-	public E exec() throws Exception {
-		return parseExcel(id, getSourceName(id), rowIndex);
-	}
+    @Override
+    public E exec() throws Exception {
+        return parseExcel(id, getSourceName(id), rowIndex);
+    }
 
-	protected E parseExcel(String sourceUri, String sourceName, int lineIndex) throws Exception {
-		long execTime = System.currentTimeMillis();
-		try(IExcelReader reader = getExcelReader(sourceUri)){
-			reader.setSheetFilter(new ExcelSheetFilter() {
-				@Override
-				public void resetSheetListForRead(List<String> nameList) {
-					ParseExcelTask.this.reRangeSheet(nameList);
-				}
+    protected E parseExcel(String sourceUri, String sourceName, int lineIndex) throws Exception {
+        long execTime = System.currentTimeMillis();
+        try(IExcelReader reader = getExcelReader(sourceUri)){
+            reader.setSheetFilter(new ExcelSheetFilter() {
+                @Override
+                public void resetSheetListForRead(List<String> nameList) {
+                    ParseExcelTask.this.reRangeSheet(nameList);
+                }
 
-				@Override
-				public boolean filter(int sheetIndex2, String sheetName) {
-					return sheetIndex2 >= ParseExcelTask.this.sheetIndex
-							&& ParseExcelTask.this.sheetFilter(sheetIndex2, sheetName);
-				}
-			});
+                @Override
+                public boolean filter(int sheetIndex2, String sheetName) {
+                    return sheetIndex2 >= ParseExcelTask.this.sheetIndex
+                            && ParseExcelTask.this.sheetFilter(sheetIndex2, sheetName);
+                }
+            });
 
-			List<V> batchData = new LinkedList<>();
-			long batchTime = System.currentTimeMillis();
-			ExcelRow row;
-			String sheetName = null;
-			while ((row = reader.readRow()) != null) {
-				if(sheetIndex < row.getSheetIndex()){
-					sheetIndex = row.getSheetIndex();
-					lineIndex = 0;
-				}
+            List<V> batchData = new LinkedList<>();
+            long batchTime = System.currentTimeMillis();
+            ExcelRow row;
+            String sheetName = null;
+            while ((row = reader.readRow()) != null) {
+                if(sheetIndex < row.getSheetIndex()){
+                    sheetIndex = row.getSheetIndex();
+                    lineIndex = 0;
+                }
 
-				if(lineIndex > 0 && row.getRowIndex() <= lineIndex){
-					continue;
-				}
-				lineIndex = row.getRowIndex();
-				sheetName = row.getSheetName();
+                if(lineIndex > 0 && row.getRowIndex() <= lineIndex){
+                    continue;
+                }
+                lineIndex = row.getRowIndex();
+                sheetName = row.getSheetName();
 
-				if (logger.isDebugEnabled()) {
-					logger.debug("parse row[file={}, sheet={}, row={}], columns={}",
-							sourceName, sheetName, rowIndex, row.getColumnList());
-				}
+                if (logger.isDebugEnabled()) {
+                    logger.debug("parse row[file={}, sheet={}, row={}], columns={}",
+                            sourceName, sheetName, rowIndex, row.getColumnList());
+                }
 
-				if(!row.isEmpty()){
-					List<V> dataList = parseRowData(row, batchTime);
-					if(dataList != null){
-						batchData.addAll(dataList);
-					}
-				}
+                if(!row.isEmpty()){
+                    List<V> dataList = parseRowData(row, batchTime);
+                    if(dataList != null){
+                        batchData.addAll(dataList);
+                    }
+                }
 
-				if((isBatchBySheet && row.isLastRow()) || (batch > 0 && batchData.size() >= batch)){
-					checkInterrupt();
-					int size = batchData.size();
-					batchProcess(batchData, batchTime);
-					logger.info("finish batch[file={}, sheet={}, row={}, size={}], cost={}ms",
-							sourceName, sheetName, lineIndex, size, System.currentTimeMillis() - batchTime);
-					logProgress(sourceName, sheetIndex, sheetName, lineIndex, false);
-					batchData.clear();
-					batchTime = System.currentTimeMillis();
-				}
-			}
-			if(!batchData.isEmpty()){
-				checkInterrupt();
-				int size = batchData.size();
-				batchProcess(batchData, batchTime);
-				logger.info("finish batch[file={}, sheet={}, row={}, size={}], cost={}ms",
-						sourceName, sheetName, lineIndex, size, System.currentTimeMillis() - batchTime);
-				logProgress(sourceName, sheetIndex, sheetName, lineIndex, false);
-			}
+                if((isBatchBySheet && row.isLastRow()) || (batch > 0 && batchData.size() >= batch)){
+                    checkInterrupt();
+                    int size = batchData.size();
+                    batchProcess(batchData, batchTime);
+                    logger.info("finish batch[file={}, sheet={}, row={}, size={}], cost={}ms",
+                            sourceName, sheetName, lineIndex, size, System.currentTimeMillis() - batchTime);
+                    logProgress(sourceName, sheetIndex, sheetName, lineIndex, false);
+                    batchData.clear();
+                    batchTime = System.currentTimeMillis();
+                }
+            }
+            if(!batchData.isEmpty()){
+                checkInterrupt();
+                int size = batchData.size();
+                batchProcess(batchData, batchTime);
+                logger.info("finish batch[file={}, sheet={}, row={}, size={}], cost={}ms",
+                        sourceName, sheetName, lineIndex, size, System.currentTimeMillis() - batchTime);
+                logProgress(sourceName, sheetIndex, sheetName, lineIndex, false);
+            }
 
-			logger.info("finish excel({}KB), cost={}ms", formatSize(getSourceSize(id)), System.currentTimeMillis() - execTime);
-			logProgress(sourceName, sheetIndex, sheetName, lineIndex, true);
-			return onExcelComplete(sourceUri, sourceName);
-		}
-	}
+            logger.info("finish excel({}KB), cost={}ms", formatSize(getSourceSize(id)), System.currentTimeMillis() - execTime);
+            logProgress(sourceName, sheetIndex, sheetName, lineIndex, true);
+            return onExcelComplete(sourceUri, sourceName);
+        }
+    }
 
-	protected IExcelReader getExcelReader(String sourceUri) throws Exception {
-		return new ExcelEventReader(getExcelInputStream(sourceUri), IExcelReader.EXCEL_XLSX);
-	}
+    protected IExcelReader getExcelReader(String sourceUri) throws Exception {
+        return new ExcelEventReader(getExcelInputStream(sourceUri), IExcelReader.EXCEL_XLSX);
+    }
 
-	/**
-	 * 单个Excel文件解析完成时的动作
-	 */
-	protected abstract E onExcelComplete(String sourceUri, String sourceName) throws Exception;
+    /**
+     * 单个Excel文件解析完成时的动作
+     */
+    protected abstract E onExcelComplete(String sourceUri, String sourceName) throws Exception;
 
-	/**
-	 * 纪录处理进度
-	 */
-	protected void logProgress(String file, int sheetIndex, String sheetName, long row, boolean completed) throws IOException {
-		if(progressLog != null && progressLog.exists()){
-			FileUtils.writeStringToFile(progressLog,
-					file + "\n" + sheetIndex + "\n" + row + "\n" + completed, Charset.defaultCharset(), false);
-		}
-	}
+    /**
+     * 纪录处理进度
+     */
+    protected void logProgress(String file, int sheetIndex, String sheetName, long row, boolean completed) throws IOException {
+        if(progressLog != null && progressLog.exists()){
+            FileUtils.writeStringToFile(progressLog,
+                    file + "\n" + sheetIndex + "\n" + row + "\n" + completed, Charset.defaultCharset(), false);
+        }
+    }
 
-	/**
-	 * 获取对应文件的InputStream
-	 */
-	protected abstract InputStream getExcelInputStream(String sourceUri) throws Exception;
+    /**
+     * 获取对应文件的InputStream
+     */
+    protected abstract InputStream getExcelInputStream(String sourceUri) throws Exception;
 
-	/**
-	 * Excel类型  xls or xlsx
-	 */
-	protected abstract String getExcelType();
+    /**
+     * Excel类型  xls or xlsx
+     */
+    protected abstract String getExcelType();
 
-	/**
-	 * 过滤需要处理的sheet页
-	 */
-	protected boolean sheetFilter(int sheetIndex, String sheetName) {
-		return true;
-	}
+    /**
+     * 过滤需要处理的sheet页
+     */
+    protected boolean sheetFilter(int sheetIndex, String sheetName) {
+        return true;
+    }
 
-	/**
-	 * 自定义sheet处理顺序
-	 * @param sheetRangeList 原sheet顺序
-	 */
-	protected void reRangeSheet(List<String> sheetRangeList) {
+    /**
+     * 自定义sheet处理顺序
+     * @param sheetRangeList 原sheet顺序
+     */
+    protected void reRangeSheet(List<String> sheetRangeList) {
 
-	}
+    }
 
-	/**
-	 * 将行字段数据映射成对应的bean或者map
-	 */
-	protected abstract List<V> parseRowData(ExcelRow row, long batchTime) throws Exception;
+    /**
+     * 将行字段数据映射成对应的bean或者map
+     */
+    protected abstract List<V> parseRowData(ExcelRow row, long batchTime) throws Exception;
 
-	/**
-	 * 批处理行数据
-	 */
-	protected abstract void batchProcess(List<V> batchData, long batchTime) throws Exception;
+    /**
+     * 批处理行数据
+     */
+    protected abstract void batchProcess(List<V> batchData, long batchTime) throws Exception;
 
-	@Override
-	public void afterExec(boolean isExecSuccess, E content, Throwable e) throws Exception {
-		if(!(deleteSource(id) && deleteProgressLog())){
-			logger.warn("clean failed.");
-		}
-	}
+    @Override
+    public void afterExec(boolean isExecSuccess, E content, Throwable e) throws Exception {
+        if(!(deleteSource(id) && deleteProgressLog())){
+            logger.warn("clean failed.");
+        }
+    }
 }

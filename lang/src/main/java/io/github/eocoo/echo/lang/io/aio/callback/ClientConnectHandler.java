@@ -13,15 +13,15 @@ import java.util.concurrent.CountDownLatch;
 @Slf4j
 public class ClientConnectHandler implements CompletionHandler<Void, CountDownLatch> {
 
-	@Override
-	public void completed (Void result, CountDownLatch connectLatch) {
-		log.info("连接成功...");
-		connectLatch.countDown();
-	}
+    @Override
+    public void completed (Void result, CountDownLatch connectLatch) {
+        log.info("连接成功...");
+        connectLatch.countDown();
+    }
 
-	@Override
-	public void failed(Throwable e, CountDownLatch connectLatch) {
-		log.error("连接失败," +  e.getMessage());
-		connectLatch.countDown();
-	}
+    @Override
+    public void failed(Throwable e, CountDownLatch connectLatch) {
+        log.error("连接失败," +  e.getMessage());
+        connectLatch.countDown();
+    }
 }

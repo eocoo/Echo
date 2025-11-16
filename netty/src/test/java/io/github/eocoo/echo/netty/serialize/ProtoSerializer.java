@@ -16,28 +16,28 @@ import java.io.IOException;
  */
 public class ProtoSerializer {
 
-	@Test
-	public void test() throws IOException {
-		ProtoBean.Bean bean = getBean();
-		byte[] bytes = serialize(bean);
+    @Test
+    public void test() throws IOException {
+        ProtoBean.Bean bean = getBean();
+        byte[] bytes = serialize(bean);
 
-		ProtoBean.Bean copy = unserialize(bytes);
-		Assertions.assertEquals(bean, copy);
-		Assertions.assertNotSame(copy, bean);
-	}
+        ProtoBean.Bean copy = unserialize(bytes);
+        Assertions.assertEquals(bean, copy);
+        Assertions.assertNotSame(copy, bean);
+    }
 
-	private ProtoBean.Bean unserialize(byte[] bytes) throws IOException {
-		return ProtoBean.Bean.parseFrom(bytes);
-	}
+    private ProtoBean.Bean unserialize(byte[] bytes) throws IOException {
+        return ProtoBean.Bean.parseFrom(bytes);
+    }
 
-	private byte[] serialize(ProtoBean.Bean bean) {
-		return bean.toByteArray();
-	}
+    private byte[] serialize(ProtoBean.Bean bean) {
+        return bean.toByteArray();
+    }
 
-	private ProtoBean.Bean getBean() {
-		ProtoBean.Bean.Builder builder = ProtoBean.Bean.newBuilder();
-		builder.setName("shanhm");
-		builder.setAge(18);
-		return builder.build();
-	}
+    private ProtoBean.Bean getBean() {
+        ProtoBean.Bean.Builder builder = ProtoBean.Bean.newBuilder();
+        builder.setName("shanhm");
+        builder.setAge(18);
+        return builder.build();
+    }
 }

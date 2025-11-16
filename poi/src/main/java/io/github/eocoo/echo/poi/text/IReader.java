@@ -9,9 +9,9 @@ import java.io.Closeable;
  */
 public interface IReader extends Closeable {
 
-	/**
-	 * 读取下一行
-	 */
-	IRow readRow() throws Exception;
+    /**
+     * 读取下一行
+     */
+    IRow readRow() throws Exception;
 
 }

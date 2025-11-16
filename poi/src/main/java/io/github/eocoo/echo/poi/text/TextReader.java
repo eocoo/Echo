@@ -18,47 +18,47 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class TextReader implements IReader {
 
-	private BufferedReader reader;
+    private BufferedReader reader;
 
-	private int rowIndex;
+    private int rowIndex;
 
-	private String regex;
+    private String regex;
 
-	public TextReader(String sourceUri, String regex) throws Exception {
-		this(new FileInputStream(new File(sourceUri)), regex);
-	}
+    public TextReader(String sourceUri, String regex) throws Exception {
+        this(new FileInputStream(new File(sourceUri)), regex);
+    }
 
-	public TextReader(File file, String regex) throws Exception {
-		this(new FileInputStream(file), regex);
-	}
+    public TextReader(File file, String regex) throws Exception {
+        this(new FileInputStream(file), regex);
+    }
 
-	public TextReader(InputStream inputStream, String regex) throws Exception {
-		this.regex = regex;
-		reader = new BufferedReader(new InputStreamReader(inputStream,"UTF-8"));
-	}
+    public TextReader(InputStream inputStream, String regex) throws Exception {
+        this.regex = regex;
+        reader = new BufferedReader(new InputStreamReader(inputStream,"UTF-8"));
+    }
 
-	@Override
-	public TextRow readRow() throws Exception {
-		String line = reader.readLine();
-		rowIndex++;
-		if(line == null){
-			return null;
-		}
+    @Override
+    public TextRow readRow() throws Exception {
+        String line = reader.readLine();
+        rowIndex++;
+        if(line == null){
+            return null;
+        }
 
-		boolean isEmpty = StringUtils.isBlank(line);
+        boolean isEmpty = StringUtils.isBlank(line);
 
-		if(regex == null){
-			TextRow row = new TextRow(rowIndex - 1, Arrays.asList(line));
-			row.setEmpty(isEmpty);
-			return row;
-		}
-		TextRow row = new TextRow(rowIndex - 1, Arrays.asList(line.split(regex)));
-		row.setEmpty(isEmpty);
-		return row;
-	}
+        if(regex == null){
+            TextRow row = new TextRow(rowIndex - 1, Arrays.asList(line));
+            row.setEmpty(isEmpty);
+            return row;
+        }
+        TextRow row = new TextRow(rowIndex - 1, Arrays.asList(line.split(regex)));
+        row.setEmpty(isEmpty);
+        return row;
+    }
 
-	@Override
-	public void close() throws IOException {
-		IOUtils.closeQuietly(reader);
-	}
+    @Override
+    public void close() throws IOException {
+        IOUtils.closeQuietly(reader);
+    }
 }

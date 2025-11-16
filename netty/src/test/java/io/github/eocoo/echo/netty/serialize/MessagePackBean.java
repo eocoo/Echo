@@ -12,40 +12,40 @@ import java.util.Objects;
 @Message
 public class MessagePackBean {
 
-	private String name;
+    private String name;
 
-	private int age;
+    private int age;
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public int getAge() {
-		return age;
-	}
+    public int getAge() {
+        return age;
+    }
 
-	public void setAge(int age) {
-		this.age = age;
-	}
+    public void setAge(int age) {
+        this.age = age;
+    }
 
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (o == null || getClass() != o.getClass()) {
-			return false;
-		}
-		MessagePackBean that = (MessagePackBean) o;
-		return age == that.age &&Objects.equals(name, that.name);
-	}
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        MessagePackBean that = (MessagePackBean) o;
+        return age == that.age &&Objects.equals(name, that.name);
+    }
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(name, age);
-	}
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, age);
+    }
 }

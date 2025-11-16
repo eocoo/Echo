@@ -15,38 +15,38 @@ import java.nio.channels.CompletionHandler;
 @Slf4j
 public class ServerReadHandler implements CompletionHandler<Integer, ByteBuffer> {
 
-	private final AsynchronousSocketChannel serverSocketChannel;
+    private final AsynchronousSocketChannel serverSocketChannel;
 
-	public ServerReadHandler(AsynchronousSocketChannel serverSocketChannel) {
-		this.serverSocketChannel = serverSocketChannel;
-	}
-	@Override
-	public void completed(Integer result, ByteBuffer buffer) {
-		buffer.flip();
-		byte[] bytes = new byte[buffer.remaining()];
-		buffer.get(bytes);
-		String msg = new String(bytes);
-		log.info(">> accept " + msg);
+    public ServerReadHandler(AsynchronousSocketChannel serverSocketChannel) {
+        this.serverSocketChannel = serverSocketChannel;
+    }
+    @Override
+    public void completed(Integer result, ByteBuffer buffer) {
+        buffer.flip();
+        byte[] bytes = new byte[buffer.remaining()];
+        buffer.get(bytes);
+        String msg = new String(bytes);
+        log.info(">> accept " + msg);
 
-		long beginTime = System.currentTimeMillis();
-		String response = "resp for " + msg;
-		bytes = response.getBytes();
+        long beginTime = System.currentTimeMillis();
+        String response = "resp for " + msg;
+        bytes = response.getBytes();
 
-		buffer.clear();
-		buffer.put(bytes);
-		buffer.flip();
-		try {
-			Thread.sleep(100); // 模拟处理耗时
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		log.info("<< " + response + ", cost=" + (System.currentTimeMillis() - beginTime) + "ms");
-		serverSocketChannel.write(buffer, buffer, new ServerWriteHandler(serverSocketChannel));
-	}
+        buffer.clear();
+        buffer.put(bytes);
+        buffer.flip();
+        try {
+            Thread.sleep(100); // 模拟处理耗时
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        log.info("<< " + response + ", cost=" + (System.currentTimeMillis() - beginTime) + "ms");
+        serverSocketChannel.write(buffer, buffer, new ServerWriteHandler(serverSocketChannel));
+    }
 
-	@Override
-	public void failed(Throwable e, ByteBuffer attachment) {
-		log.error("read failed, " + e.getMessage());
-		IOUtils.closeQuietly(serverSocketChannel);
-	}
+    @Override
+    public void failed(Throwable e, ByteBuffer attachment) {
+        log.error("read failed, " + e.getMessage());
+        IOUtils.closeQuietly(serverSocketChannel);
+    }
 }

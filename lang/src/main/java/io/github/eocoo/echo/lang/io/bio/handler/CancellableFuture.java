@@ -9,28 +9,28 @@ import java.util.concurrent.FutureTask;
  */
 public class CancellableFuture<T> extends FutureTask<T> {
 
-	private CancellableHandler handler;
+    private CancellableHandler handler;
 
-	private String msg;
+    private String msg;
 
-	public CancellableFuture(Runnable runnable, T result) {
-		super(runnable, result);
-		if(runnable instanceof CancellableHandler){
-			this.handler = (CancellableHandler)runnable;
-		}
-	}
+    public CancellableFuture(Runnable runnable, T result) {
+        super(runnable, result);
+        if(runnable instanceof CancellableHandler){
+            this.handler = (CancellableHandler)runnable;
+        }
+    }
 
-	@Override
-	public boolean cancel(boolean mayInterruptIfRunning) {
-		if(handler != null){
-			this.msg = handler.cancel();
-			return true;
-		}else{
-			return super.cancel(mayInterruptIfRunning);
-		}
-	}
+    @Override
+    public boolean cancel(boolean mayInterruptIfRunning) {
+        if(handler != null){
+            this.msg = handler.cancel();
+            return true;
+        }else{
+            return super.cancel(mayInterruptIfRunning);
+        }
+    }
 
-	public String getMsg(){
-		return msg;
-	}
+    public String getMsg(){
+        return msg;
+    }
 }

@@ -15,25 +15,25 @@ import java.nio.channels.CompletionHandler;
 @Slf4j
 public class ClientReadHandler implements CompletionHandler<Integer, ByteBuffer> {
 
-	private final AsynchronousSocketChannel socketchannel;
+    private final AsynchronousSocketChannel socketchannel;
 
-	public ClientReadHandler(AsynchronousSocketChannel clientChannel) {
-		this.socketchannel = clientChannel;
-	}
+    public ClientReadHandler(AsynchronousSocketChannel clientChannel) {
+        this.socketchannel = clientChannel;
+    }
 
-	@Override
-	public void completed(Integer result, ByteBuffer buffer) {
-		buffer.flip();
-		byte[] bytes = new byte[buffer.remaining()];
-		buffer.get(bytes);
+    @Override
+    public void completed(Integer result, ByteBuffer buffer) {
+        buffer.flip();
+        byte[] bytes = new byte[buffer.remaining()];
+        buffer.get(bytes);
 
-		String resp = new String(bytes);
-		log.info("<< " + resp);
-	}
+        String resp = new String(bytes);
+        log.info("<< " + resp);
+    }
 
-	@Override
-	public void failed(final Throwable e, ByteBuffer attachment) {
-		log.error("read failed, " + e.getMessage());
-		IOUtils.closeQuietly(socketchannel);
-	}
+    @Override
+    public void failed(final Throwable e, ByteBuffer attachment) {
+        log.error("read failed, " + e.getMessage());
+        IOUtils.closeQuietly(socketchannel);
+    }
 }

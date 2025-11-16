@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory;
  */
 public class TaskQueue<T extends Runnable> {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(Task.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(Task.class);
 
     private final int capacity = 12;
 
@@ -42,7 +42,7 @@ public class TaskQueue<T extends Runnable> {
         size++;
 
         if(isEmpty){
-        	LOGGER.info("唤醒消费者...");
+            LOGGER.info("唤醒消费者...");
             notifyAll();
         }
     }
@@ -62,7 +62,7 @@ public class TaskQueue<T extends Runnable> {
         size--;
 
         if(isFull){
-        	LOGGER.info("唤醒生产者...");
+            LOGGER.info("唤醒生产者...");
             notifyAll();
         }
         return task;

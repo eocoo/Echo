@@ -16,28 +16,28 @@ import java.io.ObjectOutputStream;
  */
 public class JdkSerializer {
 
-	@Test
-	public void test() throws IOException, ClassNotFoundException {
-		JdkBean bean = JdkBean.INSTANCE;
-		byte[] bytes = serialize(bean);
+    @Test
+    public void test() throws IOException, ClassNotFoundException {
+        JdkBean bean = JdkBean.INSTANCE;
+        byte[] bytes = serialize(bean);
 
-		JdkBean copy = unserialize(bytes);
-		Assertions.assertEquals(bean, copy);
-		Assertions.assertNotSame(copy, bean);
-	}
+        JdkBean copy = unserialize(bytes);
+        Assertions.assertEquals(bean, copy);
+        Assertions.assertNotSame(copy, bean);
+    }
 
-	private byte[] serialize(JdkBean bean) throws IOException {
-		try(ByteArrayOutputStream byteArray = new ByteArrayOutputStream();
-			ObjectOutputStream output = new ObjectOutputStream(byteArray)){
-			output.writeObject(bean);
-			return byteArray.toByteArray();
-		}
-	}
+    private byte[] serialize(JdkBean bean) throws IOException {
+        try(ByteArrayOutputStream byteArray = new ByteArrayOutputStream();
+            ObjectOutputStream output = new ObjectOutputStream(byteArray)){
+            output.writeObject(bean);
+            return byteArray.toByteArray();
+        }
+    }
 
-	private JdkBean unserialize(byte[] bytes) throws IOException, ClassNotFoundException {
-		try(ByteArrayInputStream byteArray = new ByteArrayInputStream(bytes);
-			ObjectInputStream input = new ObjectInputStream(byteArray)){
-			return (JdkBean)input.readObject();
-		}
-	}
+    private JdkBean unserialize(byte[] bytes) throws IOException, ClassNotFoundException {
+        try(ByteArrayInputStream byteArray = new ByteArrayInputStream(bytes);
+            ObjectInputStream input = new ObjectInputStream(byteArray)){
+            return (JdkBean)input.readObject();
+        }
+    }
 }

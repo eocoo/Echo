@@ -29,69 +29,69 @@ import io.netty.handler.codec.LengthFieldPrepender;
 @Slf4j
 public class MsgpackServer {
 
-	private static final Logger LOG = LoggerFactory.getLogger(MsgpackServer.class);
+    private static final Logger LOG = LoggerFactory.getLogger(MsgpackServer.class);
 
-	private final int port;
+    private final int port;
 
-	public MsgpackServer(int port) {
-		this.port = port;
-	}
+    public MsgpackServer(int port) {
+        this.port = port;
+    }
 
-	public void start() throws InterruptedException {
-		EventLoopGroup acceptGroup = new NioEventLoopGroup();
-		EventLoopGroup handleGroup = new NioEventLoopGroup();
-		ServerBootstrap serverBoot = new ServerBootstrap();
-		serverBoot.group(acceptGroup, handleGroup).channel(NioServerSocketChannel.class);
-		serverBoot.option(ChannelOption.SO_BACKLOG, 1024);
-		serverBoot.childHandler(new ChannelInitializer<SocketChannel>() {
-			@Override
-			protected void initChannel(SocketChannel channel) {
-				// decoder
-				channel.pipeline().addLast("frame decoder", new LengthFieldBasedFrameDecoder(65535, 0, 2, 0, 2));
-				channel.pipeline().addLast("msg decoder", new RequestDecoder());
-				// encoder
-				channel.pipeline().addLast("frame encoder", new LengthFieldPrepender(2));
-				channel.pipeline().addLast("msg encoder", new ResponseEncoder());
-				// ChannelHandler
-				channel.pipeline().addLast(new SocketChannelHandler());
-			}
-		});
+    public void start() throws InterruptedException {
+        EventLoopGroup acceptGroup = new NioEventLoopGroup();
+        EventLoopGroup handleGroup = new NioEventLoopGroup();
+        ServerBootstrap serverBoot = new ServerBootstrap();
+        serverBoot.group(acceptGroup, handleGroup).channel(NioServerSocketChannel.class);
+        serverBoot.option(ChannelOption.SO_BACKLOG, 1024);
+        serverBoot.childHandler(new ChannelInitializer<SocketChannel>() {
+            @Override
+            protected void initChannel(SocketChannel channel) {
+                // decoder
+                channel.pipeline().addLast("frame decoder", new LengthFieldBasedFrameDecoder(65535, 0, 2, 0, 2));
+                channel.pipeline().addLast("msg decoder", new RequestDecoder());
+                // encoder
+                channel.pipeline().addLast("frame encoder", new LengthFieldPrepender(2));
+                channel.pipeline().addLast("msg encoder", new ResponseEncoder());
+                // ChannelHandler
+                channel.pipeline().addLast(new SocketChannelHandler());
+            }
+        });
 
-		try {
-			ChannelFuture channelFuture = serverBoot.bind(port).sync();
-			channelFuture.channel().closeFuture().sync();
-		} finally {
-			acceptGroup.shutdownGracefully();
-			handleGroup.shutdownGracefully();
-		}
-	}
+        try {
+            ChannelFuture channelFuture = serverBoot.bind(port).sync();
+            channelFuture.channel().closeFuture().sync();
+        } finally {
+            acceptGroup.shutdownGracefully();
+            handleGroup.shutdownGracefully();
+        }
+    }
 
-	private static class SocketChannelHandler extends ChannelInboundHandlerAdapter {
+    private static class SocketChannelHandler extends ChannelInboundHandlerAdapter {
 
-		@Override
-		public void channelRead(ChannelHandlerContext ctx, Object msg) {
-			Request req = (Request)msg;
-			LOG.info(">> accept req[id={}, msg={}]", req.getId(), req.getMsg());
+        @Override
+        public void channelRead(ChannelHandlerContext ctx, Object msg) {
+            Request req = (Request)msg;
+            LOG.info(">> accept req[id={}, msg={}]", req.getId(), req.getMsg());
 
-			long beginTime = System.currentTimeMillis();
-			String response = "resp for " + req.getMsg();
+            long beginTime = System.currentTimeMillis();
+            String response = "resp for " + req.getMsg();
 
-			Response resp = new Response();
-			resp.setMsg(response);
-			resp.setCode(200);
-			ctx.writeAndFlush(resp);
-			LOG.info("<< resp[code={}, msg={}], cost={}ms", resp.getCode(), resp.getMsg(), System.currentTimeMillis() - beginTime);
-		}
+            Response resp = new Response();
+            resp.setMsg(response);
+            resp.setCode(200);
+            ctx.writeAndFlush(resp);
+            LOG.info("<< resp[code={}, msg={}], cost={}ms", resp.getCode(), resp.getMsg(), System.currentTimeMillis() - beginTime);
+        }
 
-		@Override
-		public void exceptionCaught(ChannelHandlerContext ctx, Throwable e) {
-			LOG.error("", e);
-			ctx.close();
-		}
-	}
+        @Override
+        public void exceptionCaught(ChannelHandlerContext ctx, Throwable e) {
+            LOG.error("", e);
+            ctx.close();
+        }
+    }
 
-	public static void main(String[] args) throws InterruptedException {
-		MsgpackServer server = new MsgpackServer(8080);
-		server.start();
-	}
+    public static void main(String[] args) throws InterruptedException {
+        MsgpackServer server = new MsgpackServer(8080);
+        server.start();
+    }
 }

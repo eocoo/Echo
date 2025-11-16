@@ -13,12 +13,12 @@ import io.netty.util.concurrent.MultithreadEventExecutorGroup;
  */
 public class NettyExecutorGroup extends MultithreadEventExecutorGroup {
 
-	public NettyExecutorGroup(int n) { // 使用默认的单线程执行，以及默认选择器
-		super(n, null, DefaultEventExecutorChooserFactory.INSTANCE, new Object[3]);
-	}
+    public NettyExecutorGroup(int n) { // 使用默认的单线程执行，以及默认选择器
+        super(n, null, DefaultEventExecutorChooserFactory.INSTANCE, new Object[3]);
+    }
 
-	@Override
-	protected EventExecutor newChild(Executor executor, Object... args) {
-		return new NettyExecutor();
-	}
+    @Override
+    protected EventExecutor newChild(Executor executor, Object... args) {
+        return new NettyExecutor();
+    }
 }

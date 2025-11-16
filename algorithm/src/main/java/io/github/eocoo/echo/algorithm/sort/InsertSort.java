@@ -11,13 +11,13 @@ import java.util.Comparator;
  */
 public class InsertSort extends Sort {
 
-	@Override
-	@SuppressWarnings("all")
-	protected void sort(Object[] array, Comparator comp) {
-		for (int i = 1; i < array.length; i++) {
-			for (int j = i; j > 0 && comp(array, j, j - 1, comp) < 0; j--) {
-				swap(array, j - 1, j);
-			}
-		}
-	}
+    @Override
+    @SuppressWarnings("all")
+    protected void sort(Object[] array, Comparator comp) {
+        for (int i = 1; i < array.length; i++) {
+            for (int j = i; j > 0 && comp(array, j, j - 1, comp) < 0; j--) {
+                swap(array, j - 1, j);
+            }
+        }
+    }
 }

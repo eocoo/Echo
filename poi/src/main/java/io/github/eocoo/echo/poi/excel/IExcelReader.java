@@ -11,23 +11,23 @@ import java.util.List;
  */
 public interface IExcelReader extends IReader {
 
-	String EXCEL_XLS = "xls";
+    String EXCEL_XLS = "xls";
 
-	String EXCEL_XLSX = "xlsx";
+    String EXCEL_XLSX = "xlsx";
 
-	/**
-	 * read next row
-	 */
-	ExcelRow readRow() throws Exception;
+    /**
+     * read next row
+     */
+    ExcelRow readRow() throws Exception;
 
-	/**
-	 * read next sheet
-	 * @return if the current sheet has remaining then return the rest, otherwise return the data of next sheet
-	 */
-	List<ExcelRow> readSheet() throws Exception;
+    /**
+     * read next sheet
+     * @return if the current sheet has remaining then return the rest, otherwise return the data of next sheet
+     */
+    List<ExcelRow> readSheet() throws Exception;
 
-	/**
-	 * set sheet filter
-	 */
-	void setSheetFilter(ExcelSheetFilter sheetFilter);
+    /**
+     * set sheet filter
+     */
+    void setSheetFilter(ExcelSheetFilter sheetFilter);
 }

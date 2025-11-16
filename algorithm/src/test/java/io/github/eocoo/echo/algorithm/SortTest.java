@@ -25,77 +25,77 @@ import io.github.eocoo.echo.algorithm.sort.Sort;
  */
 public class SortTest {
 
-	private void sortTest(Sort sort) {
-		List<Integer> list1 = new ArrayList<>(100);
-		List<Integer> list2 = new ArrayList<>(100);
+    private void sortTest(Sort sort) {
+        List<Integer> list1 = new ArrayList<>(100);
+        List<Integer> list2 = new ArrayList<>(100);
 
-		SecureRandom random = new SecureRandom();
-		for (int i = 0; i < 100; i++) {
-			list1.add(random.nextInt(100));
-		}
-		list2.addAll(list1);
+        SecureRandom random = new SecureRandom();
+        for (int i = 0; i < 100; i++) {
+            list1.add(random.nextInt(100));
+        }
+        list2.addAll(list1);
 
-		Collections.sort(list1);
-		sort.sort(list2);
-		Assertions.assertArrayEquals(list1.toArray(), list2.toArray());
-	}
+        Collections.sort(list1);
+        sort.sort(list2);
+        Assertions.assertArrayEquals(list1.toArray(), list2.toArray());
+    }
 
-	@Test
-	public void testSelect() {
-		sortTest(new SelectSort());
-	}
+    @Test
+    public void testSelect() {
+        sortTest(new SelectSort());
+    }
 
-	@Test
-	public void testInsert() {
-		sortTest(new InsertSort());
-	}
+    @Test
+    public void testInsert() {
+        sortTest(new InsertSort());
+    }
 
-	@Test
-	public void testInsertBinary() {
-		sortTest(new InsertBinarySort());
-	}
+    @Test
+    public void testInsertBinary() {
+        sortTest(new InsertBinarySort());
+    }
 
-	@Test
-	public void testInsertXierSort() {
-		sortTest(new InsertXierSort());
-	}
+    @Test
+    public void testInsertXierSort() {
+        sortTest(new InsertXierSort());
+    }
 
-	@Test
-	public void testMergeSort() {
-		sortTest(new MergeSort());
-	}
+    @Test
+    public void testMergeSort() {
+        sortTest(new MergeSort());
+    }
 
-	@Test
-	public void testQuickSort() {
-		sortTest(new QuickSort());
-	}
+    @Test
+    public void testQuickSort() {
+        sortTest(new QuickSort());
+    }
 
-	@Test
-	public void testQuickRepeatSort() {
-		sortTest(new QuickRepeatSort());
-	}
+    @Test
+    public void testQuickRepeatSort() {
+        sortTest(new QuickRepeatSort());
+    }
 
-	@Test
-	public void testSortHeap() {
-		SecureRandom random = new SecureRandom();
-		List<Long> list = new ArrayList<>();
-		for (int i = 0; i < 40; i++) {
-			list.add(random.nextLong() % 200000000000000L);
-		}
+    @Test
+    public void testSortHeap() {
+        SecureRandom random = new SecureRandom();
+        List<Long> list = new ArrayList<>();
+        for (int i = 0; i < 40; i++) {
+            list.add(random.nextLong() % 200000000000000L);
+        }
 
-		Comparator<Long> comparator = Comparator.reverseOrder();
+        Comparator<Long> comparator = Comparator.reverseOrder();
 
-		SortHeap<Long> heap = new SortHeap<>(40, comparator);
-		for (int i = 0; i < 40; i++) {
-			heap.put(list.get(i));
-		}
+        SortHeap<Long> heap = new SortHeap<>(40, comparator);
+        for (int i = 0; i < 40; i++) {
+            heap.put(list.get(i));
+        }
 
-		Object[] array = new Object[40];
-		for (int i = 0; i < 40; i++) {
-			array[i] = heap.take();
-		}
+        Object[] array = new Object[40];
+        for (int i = 0; i < 40; i++) {
+            array[i] = heap.take();
+        }
 
-		list.sort(comparator);
-		Assertions.assertArrayEquals(array, list.toArray());
-	}
+        list.sort(comparator);
+        Assertions.assertArrayEquals(array, list.toArray());
+    }
 }

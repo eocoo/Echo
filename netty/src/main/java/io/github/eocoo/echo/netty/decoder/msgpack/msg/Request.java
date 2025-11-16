@@ -10,32 +10,32 @@ import org.msgpack.annotation.Message;
 @Message
 public class Request {
 
-	private int id;
+    private int id;
 
-	private String msg;
+    private String msg;
 
-	public Request() {
+    public Request() {
 
-	}
+    }
 
-	public Request(int id) {
-		this.id = id;
-		this.msg = "msg" + id;
-	}
+    public Request(int id) {
+        this.id = id;
+        this.msg = "msg" + id;
+    }
 
-	public int getId() {
-		return id;
-	}
+    public int getId() {
+        return id;
+    }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	public String getMsg() {
-		return msg;
-	}
+    public String getMsg() {
+        return msg;
+    }
 
-	public void setMsg(String msg) {
-		this.msg = msg;
-	}
+    public void setMsg(String msg) {
+        this.msg = msg;
+    }
 }
